@@ -1,4 +1,4 @@
-[前台介绍](../project_server/README.md)
+[前台介绍](../README.md)
 
 ### 后台介绍
 
