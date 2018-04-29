@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "antd-mobile": "^2.1.8",
+    "axios": "^0.18.0",
     "react": "^16.3.2",
     "react-dom": "^16.3.2",
     "react-redux": "^5.0.7",
@@ -24,5 +25,6 @@
     "less-loader": "^4.1.0",
     "react-app-rewired": "^1.5.2",
     "redux-devtools-extension": "^2.13.2"
-  }
+  },
+  "proxy": "http://localhost:4000"
 }

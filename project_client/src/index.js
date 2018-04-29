@@ -9,6 +9,8 @@ import Login from './containers/login/login'
 import Main from './containers/main/main'
 import store from './redux/store'
 
+import './assets/css/index.less'
+
 //如果不写 path，则除了/register 和 /login之外的都走 Main这个组件
 ReactDOM.render(
     <Provider store={store}>

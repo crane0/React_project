@@ -1,4 +1,5 @@
 import React, {Component} from 'react'
+import {connect} from 'react-redux'
 import {
     NavBar,
     WingBlank,
@@ -9,15 +10,22 @@ import {
     Button
 } from 'antd-mobile'
 
+import {Redirect} from 'react-router-dom'
+
+import {register} from "../../redux/actions";
 import Logo from '../../components/logo/logo'
 
-export default class Register extends Component {
+class Register extends Component {
 
     state = {
         username: '',   //用户名
         password: '',   //密码
         passwordRpt: '',    //确认密码
         type: 'Boss'    //用户类型
+    }
+
+    handleRegister = () => {
+        this.props.register(this.state)
     }
 
     /*
@@ -46,17 +54,28 @@ export default class Register extends Component {
     * Radio，单选框
     * */
     render() {
+        const {msg, redirectTo} = this.props.user
+
+        if(redirectTo){
+            return <Redirect to={redirectTo}/>
+        }
+
         return (
             <div>
                 <NavBar>职来职往</NavBar>
                 <Logo />
                 <WingBlank>
                    <List>
-                       <InputItem onChange={val => {this.handleChange('username', val)}}>用户名：</InputItem>
+                       {/*这是错误提示信息，为null不显示
+                            这个class样式定义在了 assets/css/index.css中
+                            而引入这个样式，在入口 js(idnex.js)中
+                        */}
+                       {msg ? <div className='error_msg'>{msg}</div> : null}
+                       <InputItem placeholder='请输入用户名' onChange={val => {this.handleChange('username', val)}}>用户名：</InputItem>
                        <WhiteSpace />
-                       <InputItem onChange={val => {this.handleChange('password', val)}}>密码：</InputItem>
+                       <InputItem placeholder='请输入密码' type='password' onChange={val => {this.handleChange('password', val)}}>密码：</InputItem>
                        <WhiteSpace />
-                       <InputItem onChange={val => {this.handleChange('passwordRpt', val)}}>确认密码：</InputItem>
+                       <InputItem placeholder='请确认密码' type='password' onChange={val => {this.handleChange('passwordRpt', val)}}>确认密码：</InputItem>
                        <WhiteSpace />
                        <List.Item>
                            <span>用户类型：</span>&nbsp;&nbsp;&nbsp;&nbsp;
@@ -73,3 +92,10 @@ export default class Register extends Component {
         )
     }
 }
+
+export default connect(
+    //这个store对象中的state状态
+    state => ({user: state.user}),
+    {register}
+)(Register)
+
