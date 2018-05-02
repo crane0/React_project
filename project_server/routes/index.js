@@ -78,4 +78,45 @@ router.post('/login', function (req, res) {
     })
 })
 
+//更细用户信息
+router.post('/update',function (req, res) {
+    const userId = req.cookies.userId
+
+    if(!userId){
+        //return代表不在继续往下执行
+        return res.send({code: 1, msg: '请先登陆'})
+    }
+
+    const user = req.body
+    UserModel.findByIdAndUpdate({_id: userId}, user, function (err, oldUser) {
+        if(!oldUser){
+            res.clearCookie('userId')
+            res.send({code: 1, msg: '请先登陆'})
+        } else {
+            /*
+            * 因为这个回调函数，不会返回更新后的对象（并且在后台不能使用...剩余参数）
+            * 所以，使用 Object.assign的方式，合并对象的属性，返回一个新的属性
+            *
+            * 返回_id，因为要实现免登陆功能，_id唯一
+            * */
+            const {_id, username, type} = oldUser
+            const data = Object.assign({_id, username, type}, user)
+            res.send({code: 0, data})
+        }
+    })
+})
+
+//获取用户信息（根据cookie中的userId）
+router.get('/user', function (req, res) {
+    const userId = req.cookies.userId
+    if(!userId){
+        //return代表不在继续往下执行
+        return res.send({code: 1, msg: '请先登陆'})
+    }
+
+    UserModel.findOne({_id: userId}, filter, function (err, user) {
+        res.send({code: 0, data: user})
+    })
+})
+
 module.exports = router;

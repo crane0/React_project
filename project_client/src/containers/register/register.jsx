@@ -21,7 +21,7 @@ class Register extends Component {
         username: '',   //用户名
         password: '',   //密码
         passwordRpt: '',    //确认密码
-        type: 'Boss'    //用户类型
+        type: 'laoban'    //用户类型
     }
 
     handleRegister = () => {
@@ -41,6 +41,7 @@ class Register extends Component {
     //跳转到登陆页面
     toLogin = () => {
         this.props.history.push('/login')
+        console.log(12122)
     }
 
     /*
@@ -55,7 +56,7 @@ class Register extends Component {
     * */
     render() {
         const {msg, redirectTo} = this.props.user
-
+        console.log(redirectTo)
         if(redirectTo){
             return <Redirect to={redirectTo}/>
         }
@@ -80,7 +81,7 @@ class Register extends Component {
                        <List.Item>
                            <span>用户类型：</span>&nbsp;&nbsp;&nbsp;&nbsp;
                            <Radio checked={this.state.type === 'employee'} onClick={() => {this.handleChange('type', 'employee')}}>employee</Radio>&nbsp;&nbsp;&nbsp;&nbsp;
-                           <Radio checked={this.state.type === 'Boss'} onClick={() => {this.handleChange('type', 'Boss')}}>Boss</Radio>
+                           <Radio checked={this.state.type === 'laoban'} onClick={() => {this.handleChange('type', 'Boss')}}>Boss</Radio>
                        </List.Item>
                        <WhiteSpace />
                        <Button type='primary' onClick={this.handleRegister}>注册</Button>

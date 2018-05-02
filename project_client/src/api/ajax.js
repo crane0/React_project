@@ -1,7 +1,8 @@
 import React from 'react'
 import axios from 'axios'
 
-export default function ajax(url, data={}, type){
+//注意这里，type给了默认值GET
+export default function ajax(url, data={}, type='GET'){
 
     if(type==='GET'){
         let paramStr = ''

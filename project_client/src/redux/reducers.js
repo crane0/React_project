@@ -4,7 +4,14 @@
 
 import {combineReducers} from 'redux'
 
-import {AUTH_SUCCESS, ERROR_MSG} from './action_type'
+import {
+    AUTH_SUCCESS,
+    ERROR_MSG,
+    RECEIVE_USER,
+    RESET_USER
+} from './action_type'
+//index的话，就不会需要写了
+import {getRedirectTo} from '../utils'
 
 const initUser = {
     username: '', // 用户名
@@ -17,9 +24,16 @@ const initUser = {
 function user(state=initUser, action){
    switch (action.type) {
        case AUTH_SUCCESS :
-           return {...action.data, redirectTo: '/'}
+           //这里使用的是 user中的 type和 header
+           const {type, header} = action.data
+           return {...action.data, redirectTo: getRedirectTo(type, header)}
        case ERROR_MSG :
            return {...state, msg: action.data}
+
+       case RECEIVE_USER: // data是user
+           return action.data
+       case RESET_USER: // data是msg
+           return {...initUser, msg: action.data}
        default:
            return state
    }
