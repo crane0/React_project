@@ -81,14 +81,15 @@ router.post('/login', function (req, res) {
 //更细用户信息
 router.post('/update',function (req, res) {
     const userId = req.cookies.userId
-
     if(!userId){
         //return代表不在继续往下执行
         return res.send({code: 1, msg: '请先登陆'})
     }
 
+    //如果存在，获取后更新
     const user = req.body
     UserModel.findByIdAndUpdate({_id: userId}, user, function (err, oldUser) {
+        //如果数据库中没有了（各种原因被删除），则cookie中也没有必要存在了
         if(!oldUser){
             res.clearCookie('userId')
             res.send({code: 1, msg: '请先登陆'})

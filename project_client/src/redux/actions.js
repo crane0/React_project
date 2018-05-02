@@ -83,9 +83,14 @@ export const updateUser = (user) => {
         const result = response.data
 
         /*
-        * 分发action，执行reducers，返回就是 action.data，也就是从发送请求，从后台获取的数据
-        * 也就是当执行 updateUser时，会有下面 2种情况（在 reducers中实现的）
-        * 返回值是不同的，更新过的 state
+        * result：后台返回的数据中，
+        *   {code: 1, msg: '请先登陆'}
+        *   {code: 0, data}
+        *
+        * receiveUser(result.data)
+        *   执行reducers，返回的是 action.data，也就是result.data，即从后台获取的数据
+        * resetUser(result.msg)
+        *   执行reducers，返回的是，只是将初始的initUser中的 msg属性改了
         * */
         if(result.code === 0){
             dispatch(receiveUser(result.data))

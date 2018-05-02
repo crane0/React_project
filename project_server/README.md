@@ -8,5 +8,8 @@
 2. 后台应用自动重运行，使用的是`nodemon`包
     - 修改了`package.json`中`script`中`start`的命令
 
-#### 2.路由
+#### 2.数据库
+- 使用MongoDB
+
+#### 3.路由
 1. `/register`，用于用户注册
