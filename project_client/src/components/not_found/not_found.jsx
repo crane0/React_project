@@ -8,7 +8,9 @@ import React, {Component} from 'react'
 class NotFound extends Component {
     render() {
         return (
-            <div>NotFound</div>
+            <div>
+                <h2>NOT FOUND</h2>
+            </div>
         )
     }
 }

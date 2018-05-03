@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<script>
+    let data = 'dashen'
+    let paramStr = ''
+    Object.keys(data).forEach(key => {
+        paramStr += key + '=' + data[key] + '&'
+    })
+    console.log(paramStr)
+
+    var v1 = "abc";
+    var v2 = true;
+    var v3 = 10;
+    var v4 = Symbol("foo")
+
+    var obj = Object.assign(v1, null, v2, undefined, v3, v4);
+
+    console.log(obj); // { "0": "a", "1": "b", "2": "c" }
+</script>
+</body>
+</html>

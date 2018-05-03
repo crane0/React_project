@@ -79,8 +79,8 @@ class Register extends Component {
                        <WhiteSpace />
                        <List.Item>
                            <span>用户类型：</span>&nbsp;&nbsp;&nbsp;&nbsp;
-                           <Radio checked={this.state.type === 'employee'} onClick={() => {this.handleChange('type', 'employee')}}>employee</Radio>&nbsp;&nbsp;&nbsp;&nbsp;
-                           <Radio checked={this.state.type === 'laoban'} onClick={() => {this.handleChange('type', 'Boss')}}>Boss</Radio>
+                           <Radio checked={this.state.type === 'dashen'} onClick={() => {this.handleChange('type', 'dashen')}}>dashen</Radio>&nbsp;&nbsp;&nbsp;&nbsp;
+                           <Radio checked={this.state.type === 'laoban'} onClick={() => {this.handleChange('type', 'laoban')}}>laoban</Radio>
                        </List.Item>
                        <WhiteSpace />
                        <Button type='primary' onClick={this.handleRegister}>注册</Button>

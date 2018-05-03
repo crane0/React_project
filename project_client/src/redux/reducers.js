@@ -8,7 +8,8 @@ import {
     AUTH_SUCCESS,
     ERROR_MSG,
     RECEIVE_USER,
-    RESET_USER
+    RESET_USER,
+    RECEIVE_USERLIST
 } from './action_type'
 //index的话，就不会需要写了
 import {getRedirectTo} from '../utils'
@@ -34,11 +35,24 @@ function user(state=initUser, action){
            return action.data
        case RESET_USER: // data是msg
            return {...initUser, msg: action.data}
-       default:
+       default :
            return state
    }
 }
 
+
+const initUserList = []
+
+function userList(state=initUserList, action) {
+    switch (action.type) {
+        case RECEIVE_USERLIST :
+            return action.data
+        default :
+            return state
+    }
+}
+
 export default combineReducers({
-   user
+    user,
+    userList
 })

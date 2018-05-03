@@ -1,6 +1,6 @@
 /*
 * 底部导航栏显示的，路由组件
-*   写在components中，因为没有交互
+*   写在components中，因为没有交互，没有用到 redux
 * */
 
 import React, {Component} from 'react'

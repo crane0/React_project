@@ -11,7 +11,7 @@ import Cookies from 'js-cookie'
 * */
 import {Result, List, WhiteSpace, Button, Modal} from 'antd-mobile'
 
-//退出登录时，重置redux管理的 user
+//退出登录时，重置 redux管理的 user
 import {resetUser} from '../../redux/actions'
 
 class Personal extends Component {
@@ -22,6 +22,7 @@ class Personal extends Component {
             {
                 text: '确定',
                 onPress: () => {
+                    //退出时，要清除cookie中的数据，并且重置 redux管理的 user
                     Cookies.remove('userId')
                     this.props.resetUser()
                 }
@@ -32,9 +33,13 @@ class Personal extends Component {
     render() {
         const {username, info, header, company, post, salary} = this.props.user
 
-        /*message的属性值没有的话，就不会显示*/
+        /*
+        * 这里设置样式，是为了保证列表，不被底部和顶部导航栏盖住。
+        *
+        * message的属性值没有的话，就不会显示
+        * */
         return (
-            <div>
+            <div style={{marginBottom:50, marginTop:50}}>
                 <Result
                     img={<img src={require(`../../assets/images/${header}.png`)} style={{width: 50}} alt='header'/>}
                     title={username}

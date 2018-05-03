@@ -16,3 +16,10 @@ export const reqUpdateUser = (user) => ajax('/update', user, 'POST')
 
 //获取（通过cookie，实现免登陆功能）用户信息
 export const reqUser = () => ajax('/user')
+
+/*
+* 获取用户列表（GET请求）
+* 注意，这里是{type}，ajax中规定了参数的数据类型，
+*   如果写为type,则传递的字符串会被包装为包装类型，进行遍历组合。
+* */
+export const reqUserList = (type) => ajax('/userList', {type})

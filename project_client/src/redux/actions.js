@@ -1,14 +1,16 @@
 import {AUTH_SUCCESS,
     ERROR_MSG,
     RECEIVE_USER,
-    RESET_USER
+    RESET_USER,
+    RECEIVE_USERLIST
 } from './action_type'
 
 //这是简写了 api中的 index.js
 import {reqRegister,
     reqLogin,
     reqUpdateUser,
-    reqUser
+    reqUser,
+    reqUserList
 } from '../api'
 
 //授权成功的 同步 action
@@ -19,6 +21,10 @@ const error_msg = (msg) => ({type: ERROR_MSG, data: msg})
 const receiveUser = (user) => ({type: RECEIVE_USER, data: user})
 // 重置用户的 同步 action，暴露是因为在退出登录时用
 export const resetUser = (msg) => ({type: RESET_USER, data: msg})
+
+//接收用户列表的 同步 action
+const receiveUserList = (userList) => ({type: RECEIVE_USERLIST, data: userList})
+
 
 
 //注册异步 action
@@ -98,7 +104,7 @@ export const updateUser = (user) => {
     }
 }
 
-// 获取用户异步action
+// 获取用户 异步action
 export const getUser = () => {
     return async dispatch => {
         // 执行异步ajax请求
@@ -108,6 +114,17 @@ export const getUser = () => {
             dispatch(receiveUser(result.data))
         } else { // 失败
             dispatch(resetUser(result.msg))
+        }
+    }
+}
+
+//获取用户列表的 异步action
+export const getUserList = (type) => {
+    return async dispatch => {
+        const response = await reqUserList(type)
+        const result = response.data
+        if(result.code === 0){
+            dispatch(receiveUserList(result.data))
         }
     }
 }
