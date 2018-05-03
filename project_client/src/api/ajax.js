@@ -1,4 +1,3 @@
-import React from 'react'
 import axios from 'axios'
 
 //注意这里，type给了默认值GET

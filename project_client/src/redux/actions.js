@@ -1,5 +1,3 @@
-import React from 'react'
-
 import {AUTH_SUCCESS,
     ERROR_MSG,
     RECEIVE_USER,

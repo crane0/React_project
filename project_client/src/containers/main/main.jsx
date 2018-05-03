@@ -5,16 +5,64 @@ import React, {Component} from 'react'
 import {Switch, Route, Redirect} from 'react-router-dom'
 import {connect} from 'react-redux'
 import Cookies from 'js-cookie'
+import {NavBar} from 'antd-mobile'
 
 import LaobanInfo from '../laoban_info/laoban_info'
 import DashenInfo from '../dashen_info/dashen_info'
+import Laoban from '../laoban/laoban'
+import Dashen from '../dashen/dashen'
+import Message from '../message/message'
+import Personal from '../personal/personal'
+import NavFooter from '../../components/nav_footer/nav_footer'
+import NotFound from "../../components/not_found/not_found";
 
 import {getRedirectTo} from '../../utils'
 import {getUser} from '../../redux/actions'
 
+
 class Main extends Component {
 
-    //在第一次执行 render()之后，再执行该方法！
+    /*
+    * 给组件对象添加属性
+    * 包含所有底部导航组件中，相关的信息数据
+    * 路由路径'/laoban'对应的'大神列表'，因为老板看到的列表，肯定是有哪些大神。
+    * */
+    navList = [
+        {
+            path: '/laoban', // 路由路径
+            component: Laoban,
+            title: '大神列表',
+            icon: 'dashen',
+            text: '大神',
+        },
+        {
+            path: '/dashen', // 路由路径
+            component: Dashen,
+            title: '老板列表',
+            icon: 'laoban',
+            text: '老板',
+        },
+        {
+            path: '/message', // 路由路径
+            component: Message,
+            title: '消息列表',
+            icon: 'message',
+            text: '消息',
+        },
+        {
+            path: '/personal', // 路由路径
+            component: Personal,
+            title: '用户中心',
+            icon: 'personal',
+            text: '个人',
+        }
+    ]
+
+
+    /*
+    * 在第一次执行 render()之后，再执行该方法！
+    * 用于实现免登陆
+    * */
     componentDidMount(){
         const userId = Cookies.get('userId')
         const {_id} = this.props.user
@@ -57,14 +105,46 @@ class Main extends Component {
                 return <Redirect to={path} />
             }
         }
+        //上面都是为了实现免登陆
 
+        /*
+        * 在底部导航栏中，不同的组件，对应显示不同的信息
+        *   并且会影响到头部导航栏的标题显示
+        * 所以，需要确定在底部导航栏，当前显示的组件
+        *   通过当前路径来判断
+        * */
+        const {navList} = this
+        const currentPath = this.props.location.pathname
+        const currentNav = navList.find(nav => nav.path === currentPath)
+
+        /*
+        * 因为底部导航栏组件navList中，有3个属性
+        *   但是老板列表和大神列表同时只会显示一个，
+        * 所以，根据用户的类型，给数组的元素添加了一个属性标识，用来判断是否隐藏
+        * */
+        if(currentNav){
+            if(user.type === 'laoban'){
+                navList[1].hide = true
+            } else {
+                navList[0].hide = true
+            }
+        }
 
         return (
             <div>
+                {/*加判断是因为，在完善用户信息时，不需要当前路径的标题（NavBar是在laoban_info中已经有了）*/}
+                {currentNav ? <NavBar>{currentNav.title}</NavBar> : null}
                 <Switch>
+                    {/*遍历生成，所有数组中对应的路由，key是为了做唯一标识*/}
+                    {
+                        navList.map(nav => <Route key={nav.path} path={nav.path} component={nav.component}/>)
+                    }
                     <Route path='/laoban_info' component={LaobanInfo}/>
                     <Route path='/dashen_info' component={DashenInfo}/>
+                    <Route component={NotFound}/>
                 </Switch>
+                {/*底部导航栏的结构，单独一个模块，因为不会有交互。*/}
+                {currentNav ? <NavFooter navList={navList}/> : null}
             </div>
         )
     }

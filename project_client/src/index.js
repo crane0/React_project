@@ -1,6 +1,5 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import {Button} from 'antd-mobile'
 import {HashRouter, Switch, Route} from 'react-router-dom'
 import {Provider} from 'react-redux'
 
