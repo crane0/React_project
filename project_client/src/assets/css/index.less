@@ -3,8 +3,15 @@
   text-align: center;
   font-size: 18px;
 }
-.am-tab-bar{  /*使导航始终在底部*/
+
+/*
+  这个类名，是根据生成的div元素中的class类名
+    使导航始终在底部 height: inherit;
+  如果没有这个，则高度会占满全屏。
+*/
+.am-tab-bar{
   position: fixed;
   bottom: 0;
   width: 100%;
+  height: inherit;
 }

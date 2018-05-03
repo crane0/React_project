@@ -17,8 +17,8 @@ const auth_success = (user) => ({type: AUTH_SUCCESS, data: user})
 const error_msg = (msg) => ({type: ERROR_MSG, data: msg})
 // 接收用户的 同步 action
 const receiveUser = (user) => ({type: RECEIVE_USER, data: user})
-// 重置用户的 同步 action
-const resetUser = (msg) => ({type: RESET_USER, data: msg})
+// 重置用户的 同步 action，暴露是因为在退出登录时用
+export const resetUser = (msg) => ({type: RESET_USER, data: msg})
 
 
 //注册异步 action
