@@ -10,7 +10,7 @@ import store from './redux/store'
 
 import './assets/css/index.less'
 
-import './test/socketio_test'
+// import './test/socketio_test'
 
 //如果不写 path，则除了/register 和 /login之外的都走 Main这个组件
 ReactDOM.render(

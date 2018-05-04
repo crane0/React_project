@@ -8,6 +8,7 @@
 import React, {Component} from 'react'
 import PropTypes from 'prop-types'
 import {WingBlank, WhiteSpace, Card} from 'antd-mobile'
+import {withRouter} from 'react-router-dom'
 
 class UserList extends Component {
 
@@ -21,7 +22,11 @@ class UserList extends Component {
         console.log(userList)
 
         /*
-        * 这里设置样式，是为了保证列表，不被底部和顶部导航栏盖住。
+        * style={{marginBottom:50, marginTop:50}}
+        *   这里设置样式，是为了保证列表，不被底部和顶部导航栏盖住。
+        * Card onClick
+        *   点击对应的用户，跳转到聊天页面，${user._id}就是该卡片对应的用户，
+        *   所以在chat.jsx中，可以通过match匹配请求地址中的内容，获取对应的卡片用户
         * */
         return (
             <WingBlank style={{marginBottom:50, marginTop:50}}>
@@ -29,7 +34,7 @@ class UserList extends Component {
                     userList.map(user => (
                         <div key={user._id}>
                             <WhiteSpace/>
-                            <Card>
+                            <Card onClick={() => this.props.history.push(`/chat/${user._id}`)}>
                                 <Card.Header
                                     thumb={require(`../../assets/images/${user.header}.png`)}
                                     extra={user.username}
@@ -49,4 +54,4 @@ class UserList extends Component {
     }
 }
 
-export default UserList
+export default withRouter(UserList)

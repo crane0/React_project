@@ -15,6 +15,7 @@ import Message from '../message/message'
 import Personal from '../personal/personal'
 import NavFooter from '../../components/nav_footer/nav_footer'
 import NotFound from "../../components/not_found/not_found";
+import SendMsg from '../chat/chat'
 
 import {getRedirectTo} from '../../utils'
 import {getUser} from '../../redux/actions'
@@ -142,6 +143,7 @@ class Main extends Component {
                     }
                     <Route path='/laoban_info' component={LaobanInfo}/>
                     <Route path='/dashen_info' component={DashenInfo}/>
+                    <Route path='/chat/:userId' component={SendMsg}/>
                     <Route component={NotFound}/>
                 </Switch>
                 {/*底部导航栏的结构，单独一个模块，因为不会有交互。*/}

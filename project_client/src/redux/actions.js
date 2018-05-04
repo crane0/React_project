@@ -1,3 +1,5 @@
+import io from 'socket.io-client'
+
 import {AUTH_SUCCESS,
     ERROR_MSG,
     RECEIVE_USER,
@@ -129,3 +131,21 @@ export const getUserList = (type) => {
     }
 }
 
+
+/*单例对象*/
+function initIO() {
+    if(!io.socket){
+        io.socket = io('ws://localhost:4000')
+        io.socket.on('receiveMsg', function (chatMsg) {
+            console.log('客户端,接收服务器的消息', chatMsg)
+        })
+    }
+}
+//socketio发送消息的 异步action
+export const sendMsg = ({from, to, content}) => {
+    return dispatch => {
+        initIO()
+        io.socket.emit('sendMsg', {from, to, content})
+        console.log('客户端,向服务器发送消息', {from, to, content})
+    }
+}
