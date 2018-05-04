@@ -1,6 +1,6 @@
 
 import React, {Component} from 'react'
-import {NavBar, List, InputItem} from 'antd-mobile'
+import {NavBar, List, InputItem, Grid} from 'antd-mobile'
 import {connect} from 'react-redux'
 import {sendMsg} from "../../redux/actions";
 
@@ -8,7 +8,42 @@ class Chat extends Component {
 
     //管理要发送的内容
     state = {
-        content: ''
+        content: '',
+        isShow: false   //是否显示表情列表
+    }
+
+    //在第一次render()之前回调
+    componentWillMount() {
+        //初始化表情列表
+        const emojis = ['😂','🔥','😍','😂','🔥','😍','😂','🔥','😍','😂','🔥','😍',
+            '😂','🔥','😍','😂','🔥','😍','😂','🔥','😍','😂','🔥','😍','😂','🔥','😍',
+            '😂','🔥','😍','😂','🔥','😍','😂','🔥','😍','😂','🔥','😍','😂','🔥','😍',
+            '😂','🔥','😍','😂','🔥','😍','😂','🔥','😍','😂','🔥','😍','😂','🔥','😍',
+            '😂','🔥','😍','😂','🔥','😍','😂','🔥','😍','😂','🔥','😍',]
+
+        //需要text，因为antd组件中，Grid中的文本，需要这样使用。
+        this.emojis = emojis.map(emoji => ({text: emoji}))
+    }
+
+    //为了在进入聊天界面时，显示的是最下面的消息
+    componentDidMount() {
+        // 初始显示列表
+        window.scrollTo(0, document.body.scrollHeight)
+    }
+    componentDidUpdate () {
+        // 更新显示列表
+        window.scrollTo(0, document.body.scrollHeight)
+    }
+    
+    toggleShow = () => {
+        const isShow = !this.state.isShow
+        this.setState({isShow})
+        if(isShow){
+            // 异步手动派发resize事件,解决表情列表显示的 bug
+            setTimeout(() => {
+                window.dispatchEvent(new Event('resize'))
+            }, 0)
+        }
     }
 
     /*
@@ -74,6 +109,10 @@ class Chat extends Component {
         *
         * value={this.state.content}，是为了配合清空输入框
         *   而在onChange中，可以直接进行state的修改。
+        *
+        * onFocus，是保证获取输入框的焦点时，表情列表隐藏
+        *
+        * InputItem中extra属性中，只能有一个根标签
         * */
         return (
             <div id='chat-page'>
@@ -110,10 +149,25 @@ class Chat extends Component {
                         placeholder="请输入"
                         value={this.state.content}
                         onChange={val => this.setState({content: val})}
+                        onFocus={() => this.setState({isShow: false})}
                         extra={
-                            <span onClick={this.handleSend}>发送</span>
+                            <span>
+                                <span onClick={this.toggleShow} style={{marginRight: 8}}>😂</span>
+                                <span onClick={this.handleSend}>发送</span>
+                            </span>
                         }
                     />
+                    {this.state.isShow ? (
+                        <Grid
+                            data={this.emojis}  //传入菜单的数据 Array<{icon, text}>
+                            columnNum={8}   //列
+                            carouselMaxRow={4}      //最大行数
+                            isCarousel={true}       //有多页时，是否有轮播效果
+                            onClick={(item) => {    //点击每个菜单的回调函数，要实时更新content
+                                this.setState({content: this.state.content + item.text})
+                            }}
+                        />
+                    ) : null}
                 </div>
             </div>
         )
