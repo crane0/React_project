@@ -19,11 +19,11 @@ class UserList extends Component {
     render() {
 
         const {userList} = this.props
-        console.log(userList)
 
         /*
         * style={{marginBottom:50, marginTop:50}}
         *   这里设置样式，是为了保证列表，不被底部和顶部导航栏盖住。
+        *
         * Card onClick
         *   点击对应的用户，跳转到聊天页面，${user._id}就是该卡片对应的用户，
         *   所以在chat.jsx中，可以通过match匹配请求地址中的内容，获取对应的卡片用户

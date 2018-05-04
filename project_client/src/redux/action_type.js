@@ -8,3 +8,6 @@ export const RECEIVE_USER = 'receive_user' // 接收用户
 export const RESET_USER = 'reset_user' // 重置用户
 
 export const RECEIVE_USERLIST = 'receive_userlist'  //接收用户列表
+
+export const RECEIVE_MSGLIST = 'receive_msglist'  //接收消息列表
+export const RECEIVE_MSG = 'receive_msg'  //接收一个消息

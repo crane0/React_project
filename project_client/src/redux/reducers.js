@@ -9,7 +9,9 @@ import {
     ERROR_MSG,
     RECEIVE_USER,
     RESET_USER,
-    RECEIVE_USERLIST
+    RECEIVE_USERLIST,
+    RECEIVE_MSGLIST,
+    RECEIVE_MSG
 } from './action_type'
 //index的话，就不会需要写了
 import {getRedirectTo} from '../utils'
@@ -21,7 +23,7 @@ const initUser = {
     redirectTo: '' // 需要自动重定向的路由路径
 }
 
-//用于更新state
+//用于更新 user
 function user(state=initUser, action){
    switch (action.type) {
        case AUTH_SUCCESS :
@@ -43,6 +45,7 @@ function user(state=initUser, action){
 
 const initUserList = []
 
+//用于更新user列表
 function userList(state=initUserList, action) {
     switch (action.type) {
         case RECEIVE_USERLIST :
@@ -52,7 +55,40 @@ function userList(state=initUserList, action) {
     }
 }
 
+const initChat = {
+    users: {},
+    chatMsgs: [],
+    unReadCount: 0
+}
+//用于聊天状态
+function chat(state=initChat, action) {
+    // debugger
+    switch (action.type) {
+        case RECEIVE_MSGLIST:
+            const {users, chatMsgs} = action.data
+            return {
+                users,
+                chatMsgs,
+                unReadCount: 0
+            }
+            
+        case RECEIVE_MSG:
+            const chatMsg = action.data
+            //在消息列表中的某个消息对话中，实时更新？
+            return {
+                users: state.users,
+                chatMsgs: [...state.chatMsgs, chatMsg],
+                unReadCount: 0
+            }
+        default:
+            return state
+    }
+}
+
+
+
 export default combineReducers({
     user,
-    userList
+    userList,
+    chat
 })

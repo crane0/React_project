@@ -2,7 +2,7 @@ var express = require('express');
 var router = express.Router();
 
 const md5 = require('blueimp-md5')
-const {UserModel} = require('../db/models')
+const {UserModel, ChatModel} = require('../db/models')
 //这是配置对象，用于过滤
 const filter = {password: 0, _v: 0}
 
@@ -126,6 +126,82 @@ router.get('/userList', function (req, res) {
 
     UserModel.find({type: type}, filter, function (err, users) {
         res.send({code: 0, data: users})
+    })
+})
+
+
+//获取当前用户，所有相关聊天信息的列表
+router.get('/msgList', function (req, res) {
+
+    // 获取cookie中的userid
+    const userId = req.cookies.userId
+
+    UserModel.find(function (err, userDocs) {
+        // 用对象存储所有user信息: key为user的_id, val为name和header组成的user对象
+        // const users = {}
+        // userDocs.forEach(doc => {
+        //     users[doc._id] = {username: doc.username, header: doc.header}
+        // })
+        /*
+       * {
+         "5aeaeca0df405a0338090c65": {
+           "username": "l1",
+           "header": "头像2"
+         },
+         "5aeaecccdf405a0338090c66": {
+           "username": "d1",
+           "header": "头像2"
+         }
+       }
+       *
+       * */
+
+        const users = userDocs.reduce((users, user) => {
+            users[user._id] = {username: user.username, header: user.header}
+            return users
+        },{})
+
+        /*
+        查询userId相关的所有聊天信息
+         参数1: 查询条件
+         参数2: 过滤条件
+         参数3: 回调函数
+        */
+
+        /*
+        * "chatMsgs": [
+				{
+	                "read": false,
+	                "_id": "5ae1f3c3a95eb824841199f1",
+	                "from": "5ae1f088d37a442b749fc143",
+	                "to": "5ae1ddd99ca58023d82351ae",
+	                "content": "aa",
+	                "create_time": 1524757443374,
+	                "__v": 0
+	            }
+			]
+        * */
+        ChatModel.find({'$or' : [{from: userId}, {to: userId}]}, filter, function (err, chatMsgs) {
+            // 返回 所有用户（对象格式） 和 当前用户相关的所有聊天消息的数据（数组格式）
+            res.send({code: 0, data: {users, chatMsgs}})
+        })
+    })
+})
+
+//修改指定消息为已读
+router.post('/readMsg', function (req, res) {
+    const from = req.body.from
+    const to = req.cookies.userId
+    /*
+    更新数据库中的chat数据
+    参数1: 查询条件
+    参数2: 更新为指定的数据对象
+    参数3: 是否1次更新多条, 默认只更新一条
+    参数4: 更新完成的回调函数
+     */
+
+    ChatModel.update({from, to, read: false}, {read: true}, {multi: true}, function (err, doc) {
+        res.send({code: 0, data: doc.nModified})    //更新的数量
     })
 })
 

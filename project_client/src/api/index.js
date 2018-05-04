@@ -23,3 +23,9 @@ export const reqUser = () => ajax('/user')
 *   如果写为type,则传递的字符串会被包装为包装类型，进行遍历组合。
 * */
 export const reqUserList = (type) => ajax('/userList', {type})
+
+//获取当前用户的，聊天消息列表
+export const reqChatMsgList = () => ajax('/msgList')
+
+//修改指定消息为已读
+export const reqReadMsg = (from) => ajax('readMsg', {from}, 'POST')
