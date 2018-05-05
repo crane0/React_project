@@ -6,7 +6,8 @@ import {AUTH_SUCCESS,
     RESET_USER,
     RECEIVE_USERLIST,
     RECEIVE_MSGLIST,
-    RECEIVE_MSG
+    RECEIVE_MSG,
+    READ_MSG
 } from './action_type'
 
 //这是简写了 api中的 index.js
@@ -15,7 +16,8 @@ import {reqRegister,
     reqUpdateUser,
     reqUser,
     reqUserList,
-    reqChatMsgList
+    reqChatMsgList,
+    reqReadMsg
 } from '../api'
 
 //授权成功的 同步 action
@@ -38,6 +40,8 @@ const receiveMsgList = ({users, chatMsgs, userId}) => ({type: RECEIVE_MSGLIST, d
 * */
 const receiveMsg = (chatMsg, userId) => ({type: RECEIVE_MSG, data: {chatMsg, userId}})
 
+//读取某个聊天信息的 同步action（用于更新未读消息数量）
+const readMsg = ({count, from ,to}) => ({type: READ_MSG, data: {count, from ,to}})
 
 
 
@@ -206,5 +210,18 @@ export const sendMsg = ({from, to, content}) => {
         * */
         io.socket.emit('sendMsg', {from, to, content})
         console.log('客户端,向服务器发送消息', {from, to, content})
+    }
+}
+
+// 读取消息数量的 异步action
+export const readedMsg = (from, to) => {
+    return async dispatch => {
+        const response = await reqReadMsg(from)
+        const result = response.data
+
+        if(result.code === 0){
+            const count = result.data   //count是更新的数量
+            dispatch(readMsg({count, from ,to}))
+        }
     }
 }

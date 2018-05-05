@@ -11,3 +11,6 @@ export const RECEIVE_USERLIST = 'receive_userlist'  //接收用户列表
 
 export const RECEIVE_MSGLIST = 'receive_msglist'  //接收消息列表
 export const RECEIVE_MSG = 'receive_msg'  //接收一个消息
+
+export const READ_MSG = 'read_msg'  //用于更新未读消息数量
+

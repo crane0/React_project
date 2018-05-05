@@ -11,7 +11,8 @@ import {
     RESET_USER,
     RECEIVE_USERLIST,
     RECEIVE_MSGLIST,
-    RECEIVE_MSG
+    RECEIVE_MSG,
+    READ_MSG
 } from './action_type'
 //index的话，就不会需要写了
 import {getRedirectTo} from '../utils'
@@ -71,7 +72,6 @@ function chat(state=initChat, action) {
                 chatMsgs,
                 //未读消息，必须满足是发送给我的，并且是未读，才会 +1
                 unReadCount: chatMsgs.reduce((preTotal, msg) => preTotal + (msg.to===userId && !msg.read ? 1 : 0), 0)
-                // unReadCount: chatMsgs.reduce((preTotal, msg) => preTotal+(!msg.read&&msg.to===userId?1:0),0)
             }
             
         case RECEIVE_MSG:
@@ -91,7 +91,29 @@ function chat(state=initChat, action) {
                 *   并且因为是单个消息的获取，所以直接在state.unReadCount进行改变即可。
                 * */
                 unReadCount: state.unReadCount + (chatMsg.to===action.data.userId && !chatMsg.read ? 1 : 0)
-                // unReadCount: state.unReadCount + (!chatMsg.read&&chatMsg.to===action.data.userId?1:0)
+            }
+
+        case READ_MSG:
+            //count是更新的数量
+            const {count, from ,to} = action.data
+            // state.chatMsgs.forEach(msg => {
+            //     if(to === msg.to && from === msg.from && !msg.read){
+            //         msg.read = true
+            //     }
+            // })
+
+            return {
+                users: state.users,
+                //map返回的是一个新的数组
+                chatMsgs: state.chatMsgs.map(msg => {
+                    if(msg.from===from && msg.to===to && !msg.read) { // 需要更新
+                        //msg是一个对象，...可以解构对象，
+                        return {...msg, read: true}
+                    } else {// 不需要，map需要返回值，否则就被过滤掉了
+                        return msg
+                    }
+                }),
+                unReadCount: state.unReadCount - count
             }
         default:
             return state

@@ -2,7 +2,7 @@
 import React, {Component} from 'react'
 import {NavBar, List, InputItem, Grid, Icon} from 'antd-mobile'
 import {connect} from 'react-redux'
-import {sendMsg} from "../../redux/actions";
+import {sendMsg, readedMsg} from "../../redux/actions";
 
 class Chat extends Component {
 
@@ -26,13 +26,30 @@ class Chat extends Component {
     }
 
     //为了在进入聊天界面时，显示的是最下面的消息
-    componentDidMount() {
+    componentDidMount () {
         // 初始显示列表
         window.scrollTo(0, document.body.scrollHeight)
+
     }
     componentDidUpdate () {
         // 更新显示列表
         window.scrollTo(0, document.body.scrollHeight)
+
+    }
+
+
+    /*
+    * 用于发请求，更新消息的未读状态
+    *   更新的未读消息的代码只能写到这里，当退出聊天页面时，就会执行WillUnmount。
+    *   如果DidMount中，则只有在进入聊天页面时，才会readedMsg，
+    *       所以，如果现在已经在聊天页面，那和其他人进行聊天的过程中，不会在执行 DidMount
+    *       所以，当退出聊天页面时，刚刚的所有聊天内容，都会是未读消息显示。
+    *   如果在DidUpdate中，因为有readedMsg，所以只要一获取焦点，就会不停的执行DidUpdate，很可能会内存溢出
+    * */
+    componentWillUnmount () {
+        const from = this.props.match.params.userId
+        const to = this.props.user._id
+        this.props.readedMsg(from, to)
     }
     
     toggleShow = () => {
@@ -192,5 +209,5 @@ class Chat extends Component {
 
 export default connect(
     state => ({user: state.user, chat: state.chat}),
-    {sendMsg}
+    {sendMsg, readedMsg}
 )(Chat)
