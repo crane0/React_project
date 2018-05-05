@@ -70,7 +70,7 @@ class Register extends Component {
                             这个class样式定义在了 assets/css/index.css中
                             而引入这个样式，在入口 js(idnex.js)中
                         */}
-                       {msg ? <div className='error_msg'>{msg}</div> : null}
+                       {msg ? <div className='error-msg'>{msg}</div> : null}
                        <InputItem placeholder='请输入用户名' onChange={val => {this.handleChange('username', val)}}>用户名：</InputItem>
                        <WhiteSpace />
                        <InputItem placeholder='请输入密码' type='password' onChange={val => {this.handleChange('password', val)}}>密码：</InputItem>

@@ -136,7 +136,7 @@ class Main extends Component {
         return (
             <div>
                 {/*加判断是因为，在完善用户信息时，不需要当前路径的标题（NavBar是在laoban_info中已经有了）*/}
-                {currentNav ? <NavBar>{currentNav.title}</NavBar> : null}
+                {currentNav ? <NavBar className='sticky-header'>{currentNav.title}</NavBar> : null}
                 <Switch>
                     {/*遍历生成，所有数组中对应的路由，key是为了做唯一标识*/}
                     {
