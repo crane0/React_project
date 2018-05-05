@@ -32,7 +32,7 @@ const receiveUserList = (userList) => ({type: RECEIVE_USERLIST, data: userList})
 
 //接收消息列表的 同步 action
 const receiveMsgList = ({users, chatMsgs}) => ({type: RECEIVE_MSGLIST, data: {users, chatMsgs}})
-//接收一个消息的 同步action
+//接收一个消息的 同步action，用于在接收消息后，实时更新消息列表
 const receiveMsg = (chatMsg) => ({type: RECEIVE_MSG, data: chatMsg})
 
 
@@ -155,6 +155,7 @@ export const getUserList = (type) => {
 function initIO(dispatch, userId) {
     if(!io.socket){
         io.socket = io('ws://localhost:4000')
+        //接收消息
         io.socket.on('receiveMsg', function (chatMsg) {
 
             // 只有当chatMsg是与当前用户相关的消息, 才去分发同步action保存消息

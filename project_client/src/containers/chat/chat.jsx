@@ -1,6 +1,6 @@
 
 import React, {Component} from 'react'
-import {NavBar, List, InputItem, Grid} from 'antd-mobile'
+import {NavBar, List, InputItem, Grid, Icon} from 'antd-mobile'
 import {connect} from 'react-redux'
 import {sendMsg} from "../../redux/actions";
 
@@ -78,9 +78,14 @@ class Chat extends Component {
         const meId = user._id
         /*
         * 如果还没有获取数据, 直接不做任何显示
+        * 因为，如果在聊天页面进行刷新，就要进行免登陆功能的逻辑，
+        *   而在发送请求获取用户信息时getUser中，执行getMsgList获取消息列表时
+        *   还没有获取到 this.props.chat中的数据时，
+        *   当前路由已经进行render渲染了，
+        *   下面的逻辑中在使用users时，就会报错
+        *
         * */
         if(!users[meId]){
-            console.log(users,users[meId])
             return null
         }
 
@@ -104,6 +109,8 @@ class Chat extends Component {
         const otherIcon = otherHeader ? require(`../../assets/images/${otherHeader}.png`) : null
 
         /*
+        * NavBar中，设置了回退按钮
+        *
         * msgs.map()做的判断，
         *   是因为聊天双方的人，他们的头像和聊天信息，显示的位置不同
         *
@@ -116,8 +123,14 @@ class Chat extends Component {
         * */
         return (
             <div id='chat-page'>
-                <NavBar>aa</NavBar>
-                <List>
+                <NavBar
+                    icon={<Icon type='left'/>}
+                    className='sticky-header'
+                    onLeftClick={()=> this.props.history.goBack()}
+                >
+                    {users[otherId].username}
+                </NavBar>
+                <List style={{marginTop:50, marginBottom: 50}}>
                     {
                         msgs.map(msg => {
                             if(otherId===msg.from){     //对方的消息

@@ -74,7 +74,10 @@ function chat(state=initChat, action) {
             
         case RECEIVE_MSG:
             const chatMsg = action.data
-            //在消息列表中的某个消息对话中，实时更新？
+            /*
+            * chatMsg，就是接收到的消息，下面的逻辑就是在更新消息列表 chatMsgs
+            *   所以，也就实现了实时聊天
+            * */
             return {
                 users: state.users,
                 chatMsgs: [...state.chatMsgs, chatMsg],

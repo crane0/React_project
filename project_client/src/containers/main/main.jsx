@@ -87,9 +87,10 @@ class Main extends Component {
 
         /*
         * 如果cookie中有，说明之前登陆过（也经历过注册，所以user中会有_id）。
-        * 再检查 user中_id，如果没有，说明还没有完善详细信息
-        * 则return null，页面什么都不显示，接下来立马执行
-        *   上面的 componentDidMount，发送请求，获取数据库的 user信息
+        * 再检查 user中_id，因为user是通过redux进行管理的，
+        *   如果没有，说明还没有进行redux的相关操作（登陆，注册，更新用户信息等）
+        * 则 return null，页面什么都不显示，接下来，
+        *   立马执行上面的 componentDidMount，发送请求，获取数据库的 user信息
         *   再执行下面的重定向。也就实现了免登陆功能。
         * */
         const {user} = this.props

@@ -176,6 +176,7 @@ router.get('/msgList', function (req, res) {
 	                "from": "5ae1f088d37a442b749fc143",
 	                "to": "5ae1ddd99ca58023d82351ae",
 	                "content": "aa",
+	                "chat_id": "5aeaeca0df405a0338090c65_5aeaecccdf405a0338090c66",
 	                "create_time": 1524757443374,
 	                "__v": 0
 	            }
