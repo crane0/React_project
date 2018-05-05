@@ -65,15 +65,18 @@ function chat(state=initChat, action) {
     // debugger
     switch (action.type) {
         case RECEIVE_MSGLIST:
-            const {users, chatMsgs} = action.data
+            const {users, chatMsgs, userId} = action.data
             return {
                 users,
                 chatMsgs,
-                unReadCount: 0
+                //未读消息，必须满足是发送给我的，并且是未读，才会 +1
+                unReadCount: chatMsgs.reduce((preTotal, msg) => preTotal + (msg.to===userId && !msg.read ? 1 : 0), 0)
+                // unReadCount: chatMsgs.reduce((preTotal, msg) => preTotal+(!msg.read&&msg.to===userId?1:0),0)
             }
             
         case RECEIVE_MSG:
-            const chatMsg = action.data
+            //因为在action中，多传了userId，所以要使用{}进行获取chatMsg
+            const {chatMsg} = action.data
             /*
             * chatMsg，就是接收到的消息，下面的逻辑就是在更新消息列表 chatMsgs
             *   所以，也就实现了实时聊天
@@ -81,7 +84,14 @@ function chat(state=initChat, action) {
             return {
                 users: state.users,
                 chatMsgs: [...state.chatMsgs, chatMsg],
-                unReadCount: 0
+                /*
+                * 只有chat函数一个作用域，对一个对象进行结构赋值，获取相同的参数只能进行一次！
+                *   因为在第一个case中，已经进行了 userId的获取，所以这里如果在使用解构赋值获取，就会报错！
+                *   所以，直接使用了 action.data.userId
+                *   并且因为是单个消息的获取，所以直接在state.unReadCount进行改变即可。
+                * */
+                unReadCount: state.unReadCount + (chatMsg.to===action.data.userId && !chatMsg.read ? 1 : 0)
+                // unReadCount: state.unReadCount + (!chatMsg.read&&chatMsg.to===action.data.userId?1:0)
             }
         default:
             return state

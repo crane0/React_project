@@ -30,10 +30,13 @@ export const resetUser = (msg) => ({type: RESET_USER, data: msg})
 //接收用户列表的 同步 action
 const receiveUserList = (userList) => ({type: RECEIVE_USERLIST, data: userList})
 
-//接收消息列表的 同步 action
-const receiveMsgList = ({users, chatMsgs}) => ({type: RECEIVE_MSGLIST, data: {users, chatMsgs}})
-//接收一个消息的 同步action，用于在接收消息后，实时更新消息列表
-const receiveMsg = (chatMsg) => ({type: RECEIVE_MSG, data: chatMsg})
+//接收消息列表的 同步 action (userId为了实现未读消息数量的传递)
+const receiveMsgList = ({users, chatMsgs, userId}) => ({type: RECEIVE_MSGLIST, data: {users, chatMsgs, userId}})
+/*
+* 接收一个消息的 同步action，用于在接收消息后，实时更新消息列表
+*   userId为了实现未读消息数量的传递，注意传递 2个参数时，data是对象格式！
+* */
+const receiveMsg = (chatMsg, userId) => ({type: RECEIVE_MSG, data: {chatMsg, userId}})
 
 
 
@@ -158,9 +161,9 @@ function initIO(dispatch, userId) {
         //接收消息
         io.socket.on('receiveMsg', function (chatMsg) {
 
-            // 只有当chatMsg是与当前用户相关的消息, 才去分发同步action保存消息
+            // 只有当chatMsg是与当前用户相关的消息, 才去分发同步action保存消息！
             if(userId === chatMsg.from || userId === chatMsg.to){
-                dispatch(receiveMsg(chatMsg))
+                dispatch(receiveMsg(chatMsg, userId))
 
                 console.log('客户端,接收服务器的消息', chatMsg)
             }
@@ -182,7 +185,7 @@ async function getMsgList(dispatch, userId){
     if(result.code === 0){
         //users是对象格式，chatMsgs是数组格式
         const {users, chatMsgs} = result.data
-        dispatch(receiveMsgList({users, chatMsgs}))
+        dispatch(receiveMsgList({users, chatMsgs, userId}))
     }
 }
 

@@ -67,7 +67,10 @@ class Chat extends Component {
         }
 
         //发送完当前内容后，清除输入框的数据
-        this.setState({content: ''})
+        this.setState({
+            content: '',
+            isShow: false
+        })
     }
 
     render() {

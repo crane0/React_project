@@ -113,7 +113,7 @@ class Main extends Component {
         /*
         * 在底部导航栏中，不同的组件，对应显示不同的信息
         *   并且会影响到头部导航栏的标题显示
-        * 所以，需要确定在底部导航栏，当前显示的组件
+        * 所以，需要确定在底部导航栏中，当前显示的组件
         *   通过当前路径来判断
         * */
         const {navList} = this
@@ -133,6 +133,9 @@ class Main extends Component {
             }
         }
 
+        //得到props中的unReadCount，为了在底部导航栏显示
+        const unReadCount = this.props.unReadCount
+
         return (
             <div>
                 {/*加判断是因为，在完善用户信息时，不需要当前路径的标题（NavBar是在laoban_info中已经有了）*/}
@@ -148,13 +151,16 @@ class Main extends Component {
                     <Route component={NotFound}/>
                 </Switch>
                 {/*底部导航栏的结构，单独一个模块，因为不会有交互。*/}
-                {currentNav ? <NavFooter navList={navList}/> : null}
+                {currentNav ? <NavFooter navList={navList} unReadCount={unReadCount}/> : null}
             </div>
         )
     }
 }
 
 export default connect(
-    state => ({user: state.user}),
+    state => ({
+        user: state.user,
+        unReadCount: state.chat.unReadCount     //接收未读消息的属性，为了在底部导航栏显示
+    }),
     {getUser}
 )(Main)

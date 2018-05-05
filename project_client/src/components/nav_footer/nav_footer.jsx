@@ -13,23 +13,28 @@ import {TabBar} from 'antd-mobile'
 class NavFooter extends Component {
 
     static propTypes = {
-        navList: PropTypes.array.isRequired
+        navList: PropTypes.array.isRequired,
+        unReadCount: PropTypes.number.isRequired
     }
 
     render() {
 
-        let {navList} = this.props
+        let {navList, unReadCount} = this.props
         //隐藏需要隐藏的
         navList = navList.filter(nav => !nav.hide)
 
         //用于在<TabBar.Item/>中的 selected属性，是否选中
         const path = this.props.location.pathname
 
+
+        //badge用来显示未读消息的数量，因为只需要在message导航组件上显示，所以做了判断，0代表不显示
+        console.log(unReadCount)
         return (
             <TabBar>
                 {
                     navList.map(nav => (
                         <TabBar.Item key={nav.path}
+                            badge={nav.path === '/message' ? unReadCount : 0}
                             title={nav.text}
                             icon={{uri: require(`./images/${nav.icon}.png`)}}
                             selectedIcon={{uri: require(`./images/${nav.icon}_selected.png`)}}

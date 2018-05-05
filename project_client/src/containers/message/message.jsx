@@ -11,7 +11,7 @@ import {List, Badge} from 'antd-mobile'
 2. 得到所有lastMsg的数组
 3. 对数组进行排序(按create_time降序)
  */
-function getLastMsgs(chatMsgs) {
+function getLastMsgs(chatMsgs, userId) {
     /*
     * 1. 找出每个聊天的lastMsg, 并用一个对象容器来保存 {chat_id, lastMsg}
     *   放在对象中，是因为在显示消息列表时，只需要其中的msg，并对其排序
@@ -21,6 +21,17 @@ function getLastMsgs(chatMsgs) {
     const lastMsgObjs = {}
 
     chatMsgs.forEach((msg) => {
+
+        /*
+        * 统计msg中，是发给我的，并且是未读的，
+        *   如果满足，将 unReadCount置位 1
+        *   (unReadCount置位在chat状态中进行了管理)
+        * */
+        if(msg.to===userId && !msg.read){
+            msg.unReadCount = 1
+        } else {
+            msg.unReadCount = 0
+        }
 
         const chatId = msg.chat_id
         /*
@@ -35,10 +46,23 @@ function getLastMsgs(chatMsgs) {
         if(!lastMsg){
             lastMsgObjs[chatId] = msg
         } else {
+            /*
+            * 累加 unReadCount = 已经统计的 + 当前msg的
+            *   因为正在进行数组遍历，所以每一个msg都会被循环到，
+            *   但是，只有满足是当前 chatId属性对应的属性值 lastMsg才会进入到此，
+            *   这样，就实现了对当前chatId对应的 lastMsg中，未读消息的统计
+            * */
+            const unReadCount = lastMsg.unReadCount + msg.unReadCount
+
             //如果msg比lastMsg晚, 就将msg保存为lastMsg
             if(msg.create_time > lastMsg.create_time){
                 lastMsgObjs[chatId] = msg
             }
+            /*
+            * 最后将未读消息总数，给对应的lastMsg的属性
+            *   放在最下面，是为了保证 lastMsgObjs[chatId]是最晚的 msg
+            * */
+            lastMsgObjs[chatId].unReadCount = unReadCount
         }
     })
     //2. 得到所有lastMsg的数组
@@ -62,7 +86,7 @@ class Message extends Component {
         const {users, chatMsgs} = this.props.chat
 
         //将最后一条消息，按chat_id进行分组
-        const lastMsgs = getLastMsgs(chatMsgs)
+        const lastMsgs = getLastMsgs(chatMsgs, user._id)
 
         return (
             <List style={{marginTop:50, marginBottom: 50}}>
@@ -76,11 +100,16 @@ class Message extends Component {
                         const otherUserId = msg.to===user._id ? msg.from : msg.to
                         // 得到目标用户的信息
                         const otherUser = users[otherUserId]
-                        //thumb中做的判断，因为用户信息可能不完善，也就没有图像
+
+
+                        /*
+                        * extra中Badge为了显示，未读消息的个数
+                        * thumb中做的判断，因为用户信息可能不完善，也就没有图像
+                        * */
                         return (
                             <List.Item
                                 key={msg._id}
-                                extra={<Badge text={0}/>}
+                                extra={<Badge text={msg.unReadCount}/>}
                                 thumb={otherUser.header ? require(`../../assets/images/${otherUser.header}.png`) : null}
                                 arrow='horizontal'
                                 onClick={() => this.props.history.push(`/chat/${otherUserId}`)}
