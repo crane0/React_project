@@ -29,12 +29,10 @@ class Chat extends Component {
     componentDidMount () {
         // 初始显示列表
         window.scrollTo(0, document.body.scrollHeight)
-
     }
     componentDidUpdate () {
         // 更新显示列表
         window.scrollTo(0, document.body.scrollHeight)
-
     }
 
 
